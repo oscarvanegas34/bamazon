@@ -5,6 +5,10 @@ Amazon-like storefront with MySQL
 
 https://drive.google.com/file/d/10k7Zahugx-d5SyCfyr-2bMYPKGiyl4nK/view
 
+# Link to challenge # 2
+
+https://drive.google.com/file/d/1SDmC7xVs_cuILdMHF2dq6h6zR7kRkkr0/view
+
 ## Instructions
 
 ### Challenge #1: Customer View
