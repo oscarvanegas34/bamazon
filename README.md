@@ -1,6 +1,10 @@
 # bamazon
 Amazon-like storefront with MySQL
 
+# Link to the challenge # 1
+
+https://drive.google.com/file/d/10k7Zahugx-d5SyCfyr-2bMYPKGiyl4nK/view
+
 ## Instructions
 
 ### Challenge #1: Customer View
