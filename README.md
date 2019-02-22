@@ -9,6 +9,10 @@ https://drive.google.com/file/d/10k7Zahugx-d5SyCfyr-2bMYPKGiyl4nK/view
 
 https://drive.google.com/file/d/1SDmC7xVs_cuILdMHF2dq6h6zR7kRkkr0/view
 
+# # Link to challenge # 3
+
+https://drive.google.com/file/d/1MylgEu3AL4yIQp-EAq_9Cbp6eVlw_6HP/view
+
 ## Instructions
 
 ### Challenge #1: Customer View
