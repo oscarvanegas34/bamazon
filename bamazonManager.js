@@ -245,7 +245,7 @@ function addProduct(input, itemID){
 
 	input.item_id = ++itemID;
 
-	console.log(input);
+	// console.log(input);
 	// console.log('last ItemID ' + itemID);
 	// Create the insertion query string
 	var queryStr = 'INSERT INTO products SET ?';
