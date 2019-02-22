@@ -19,43 +19,41 @@ var connection = mysql.createConnection({
 });
 
 // This function will present menu options to the manager and it will trigger the appropiate task
-function promptManagerAction() {	
+function promptManagerAction() {
 
 	// Prompt the manager to select an option
-	inquirer.prompt([
-		{
-			type: "list",
-			name: "option",
-			message: "Please select an option:",
-			choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"],
-			filter: function (val) {
-				if (val === "View Products for Sale") {
-					return "sale";
-				} else if (val === "View Low Inventory") {
-					return "lowInventory";
-				} else if (val === "Add to Inventory") {
-					return "addInventory";
-				} else if (val === "Add New Product") {
-					return "newProduct";
-				} else {
-					// This case should be unreachable
-					console.table("ERROR: Unsupported operation!");
-					exit(1);
-				}
+	inquirer.prompt([{
+		type: "list",
+		name: "option",
+		message: "Please select an option:",
+		choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"],
+		filter: function (val) {
+			if (val === "View Products for Sale") {
+				return "sale";
+			} else if (val === "View Low Inventory") {
+				return "lowInventory";
+			} else if (val === "Add to Inventory") {
+				return "addInventory";
+			} else if (val === "Add New Product") {
+				return "newProduct";
+			} else {
+				// This case should be unreachable
+				console.table("ERROR: Unsupported operation!");
+				exit(1);
 			}
 		}
-	]).then(function(input) {
+	}]).then(function (input) {
 		// console.log('User has selected: ' + JSON.stringify(input));
 
 		// Trigger the appropriate action based on the user input
-		if (input.option ==="sale") {
+		if (input.option === "sale") {
 			displaySalesItems();
 		} else if (input.option === "lowInventory") {
 			displayLowInventory();
 		} else if (input.option === "addInventory") {
 			addInventory();
 		} else if (input.option === "newProduct") {
-            createNewProduct();            
+			createNewProduct();
 		} else {
 			// This case should be unreachable
 			console.log("ERROR: Unsupported operation!");
@@ -66,12 +64,12 @@ function promptManagerAction() {
 
 // displaySalesItems will retrieve the current inventory from the database and output it to the console
 function displaySalesItems() {
-	
+
 	// Construct the db query string
 	queryStr = "SELECT item_id as ID, product_name as Names, department_name as Departments , price as Prices, stock_quantity as Quantities FROM products";
 
 	// Make the db query
-	connection.query(queryStr, function(err, data) {
+	connection.query(queryStr, function (err, data) {
 		if (err) throw err;
 
 		console.log('Existing Inventory: ');
@@ -79,7 +77,7 @@ function displaySalesItems() {
 
 		console.table(data);
 
-	  	console.log("---------------------------------------------------------------------\n");
+		console.log("---------------------------------------------------------------------\n");
 
 		// End the database connection
 		connection.end();
@@ -88,20 +86,20 @@ function displaySalesItems() {
 
 // This fucntion will display a list of products where the quantity in stock is below 100
 function displayLowInventory() {
-	
+
 	// Construct the db query string
 	queryStr = "SELECT item_id as ID, product_name as Names, department_name as Departments , price as Prices, stock_quantity as Quantities FROM products WHERE stock_quantity < 100";
 
 	// Make the db query
-	connection.query(queryStr, function(err, data) {
+	connection.query(queryStr, function (err, data) {
 		if (err) throw err;
 
 		console.log('Low Inventory Items (below 100): ');
 		console.log('................................\n');
-	
-        console.table(data);
 
-	  	console.log("---------------------------------------------------------------------\n");
+		console.table(data);
+
+		console.log("---------------------------------------------------------------------\n");
 
 		// End the database connection
 		connection.end();
@@ -134,11 +132,10 @@ function validateNumeric(value) {
 }
 
 // addInventory will guilde a user in adding additional quantify to an existing item
-function addInventory() {	
+function addInventory() {
 
 	// Prompt the user to select an item
-	inquirer.prompt([
-		{
+	inquirer.prompt([{
 			type: "input",
 			name: "item_id",
 			message: "Please enter the Item ID for the product update.",
@@ -152,7 +149,7 @@ function addInventory() {
 			validate: validateInteger,
 			filter: Number
 		}
-	]).then(function(input) {
+	]).then(function (input) {
 		// console.log('Manager has selected: \n    item_id = '  + input.item_id + '\n    additional quantity = ' + input.quantity);
 
 		var item = input.item_id;
@@ -161,7 +158,9 @@ function addInventory() {
 		// Query db to confirm that the given item ID exists and to determine the current stock_count
 		var queryStr = 'SELECT * FROM products WHERE ?';
 
-		connection.query(queryStr, {item_id: item}, function(err, data) {
+		connection.query(queryStr, {
+			item_id: item
+		}, function (err, data) {
 			if (err) throw err;
 
 			// If the user has selected an invalid item ID, data attay will be empty			
@@ -183,7 +182,7 @@ function addInventory() {
 				// console.log('updateQueryStr = ' + updateQueryStr);
 
 				// Update the inventory
-				connection.query(updateQueryStr, function(err, data) {
+				connection.query(updateQueryStr, function (err, data) {
 					if (err) throw err;
 
 					console.log("Stock count for Item ID " + item + " has been updated to " + (productData.stock_quantity + addQuantity) + ".");
@@ -202,8 +201,7 @@ function createNewProduct() {
 	// console.log('___ENTER createNewProduct___');
 
 	// Prompt the user to enter information about the new product
-	inquirer.prompt([
-		{
+	inquirer.prompt([{
 			type: 'input',
 			name: 'product_name',
 			message: 'Please enter the new product name.',
@@ -225,29 +223,42 @@ function createNewProduct() {
 			message: 'How many items are in stock?',
 			validate: validateInteger
 		}
-	]).then(function(input) {		
+	]).then(function (input) {
 
-		console.log('Adding New Item: \n    product_name = ' + input.product_name + '\n' +  
-									   '    department_name = ' + input.department_name + '\n' +  
-									   '    price = ' + input.price + '\n' +  
-									   '    stock_quantity = ' + input.stock_quantity);
+		console.log('Adding New Item: \n    product_name = ' + input.product_name + '\n' +
+			'    department_name = ' + input.department_name + '\n' +
+			'    price = ' + input.price + '\n' +
+			'    stock_quantity = ' + input.stock_quantity);
+		// Grabbing the last ID from the database
+			var queryStr1 = 'SELECT * FROM products ORDER BY item_id DESC LIMIT 1';
 
-		// Create the insertion query string
-		var queryStr = 'INSERT INTO products SET ?';
-
-		// Add new product to the db
-		connection.query(queryStr, input, function (error, results, fields) {            
-			if (error) throw error;
-
-			console.log('New product has been added to the inventory under Item ID ' + results.insertId + '.');
-			console.log("\n---------------------------------------------------------------------\n");
-            
-			// End the database connection
-			connection.end();
-		});
+			connection.query(queryStr1, function (error, results, fields) {
+				if (error) throw error;
+				// console.log(results[0].item_id);
+				addProduct(input, results[0].item_id);
+			});
 	})
 }
+function addProduct(input, itemID){
+	// var newItem_id = itemID + 1;
+	// Insert newItem_id into input
 
+	input.item_id = ++itemID;
+
+	console.log(input);
+	// console.log('last ItemID ' + itemID);
+	// Create the insertion query string
+	var queryStr = 'INSERT INTO products SET ?';
+	// Add new product to the db
+	connection.query(queryStr, input, function (error, results, fields) {
+		if (error) throw error;
+
+		console.log('New product has been added to the inventory under Item ID ' + input.item_id + '.');
+		console.log("\n---------------------------------------------------------------------\n");
+		// End the database connection
+		connection.end();
+	});
+}
 // runBamazon will execute the main application logic
 function runBamazon() {
 	// console.log('___ENTER runBamazon___');
